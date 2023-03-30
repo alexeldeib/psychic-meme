@@ -1,4 +1,4 @@
-name: test
+name: kernel
 
 on:
   push:
@@ -7,11 +7,12 @@ on:
     branches: [ '**' ]
 
 jobs:
-  test:
+  kernel:
     runs-on: ubuntu-latest
     steps:
-    - name: check kvm
+    - name: build
       run: |
         pwd
-        ./scripts/build-images.sh
+        ls -al
+        bash ./scripts/build-images.sh
       shell: bash
