@@ -11,5 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: check kvm
-      run: ./scripts/build-images.sh
+      run: |
+        pwd
+        ./scripts/build-images.sh
       shell: bash
