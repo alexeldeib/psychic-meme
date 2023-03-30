@@ -11,7 +11,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: check kvm
-      run: |
-        sudo apt-get update && sudo apt-get install -yq cpu-checker
-        sudo kvm-ok
+      run: ./scripts/build-images
       shell: bash

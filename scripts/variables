@@ -1,0 +1,21 @@
+NUMBER_VMS=1
+
+VM_VCPUS=2
+VM_RAM_GB=4
+IMAGE_SIZE=8G
+
+FIRECRACKER=`which firecracker`
+FIRECRACKER_PID_DIR=/tmp/.firecracker
+FIRECRACKER_SOCKET=/tmp/.firecracker.socket
+FIRECRACKER_BRIDGE=fcbr0
+
+EGRESS_IFACE=`ip route get 8.8.8.8 | grep uid |sed 's/.* dev \([^ ]*\) .*/\1/'`	# or hardcode to specific device if wanted
+VMS_NETWORK_PREFIX=172.26.0		# for scripts simplicity, it is always assumed here a /24 network
+
+UBUNTU_VERSION=bionic
+IMAGE_ROOTFS=images/$UBUNTU_VERSION/$UBUNTU_VERSION.rootfs
+KERNEL_IMAGE=images/$UBUNTU_VERSION/$UBUNTU_VERSION.vmlinux
+INITRD=images/$UBUNTU_VERSION/$UBUNTU_VERSION.initrd
+
+KEYPAIR_DIR=keypairs
+DEFAULT_KP=kp
