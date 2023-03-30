@@ -16,5 +16,5 @@ jobs:
         sudo apt-get update && sudo apt-get install -yq tree
         bash ./scripts/build-images.sh
         tree images
-        stat -c "%n %s" images/*
+        stat -c "%n %s" images/jammy/jammy.*
       shell: bash
