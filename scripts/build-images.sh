@@ -4,7 +4,7 @@
 ## images. For simplicity it currently only downloads from Ubuntu images, but it
 ## should not be a big effort to adapt to other cloud images.
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 source scripts/variables
 
