@@ -11,5 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: build
-      run: ./scripts/build-images.sh
+      run: |
+        bash ./scripts/build-images.sh
       shell: bash
