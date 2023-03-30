@@ -14,5 +14,5 @@ jobs:
     - name: build
       run: |
         bash ./scripts/build-images.sh
-        ls -al
+        ls -al images
       shell: bash
