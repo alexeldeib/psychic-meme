@@ -29,8 +29,8 @@ jobs:
         ls -al
         tree -L 2 .
         tree -L 2 dist
-        tree images
+        tree -L 2 output/images
         docker build . -t test
-        docker run -it --rm --entrypoint ls -al /dist test
+        docker run -it --rm /dist test
         # stat -c "%n %s" images/jammy/jammy.*
       shell: bash
