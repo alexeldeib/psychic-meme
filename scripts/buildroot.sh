@@ -20,10 +20,13 @@ trap cleanup EXIT
 git clone https://github.com/buildroot/buildroot
 pushd buildroot
 git checkout 2023.02
+
+make BR2_EXTERNAL=$REPO_ROOT default_defconfig
+make BR2_EXTERNAL=$REPO_ROOT -j$(nproc)
 popd || exit 1
 
-make BR2_EXTERNAL=$REPO_ROOT -C buildroot default_defconfig
-make BR2_EXTERNAL=$REPO_ROOT -C buildroot -j$(nproc)
-cp $REPO_ROOT
+tree buildroot/output/images
+
+# cp buildroot/images/
+
 tree $REPO_ROOT
-tree buildroot
