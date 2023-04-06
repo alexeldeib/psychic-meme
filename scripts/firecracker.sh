@@ -5,13 +5,13 @@ sudo apt-get update && sudo apt-get install -yq tree
 
 FIRECRACKER_VERSION="v1.3.1"
 
-root=$(pwd)/$(mktemp -d final-XXXX)
+root=$(pwd)/dist
 work=$(pwd)/$(mktemp -d work-XXXX)
 pushd $work || exit 1
 
 function cleanup() {
-  popd
-  rm -r "$work"
+  popd || true
+  rm -r "$work" || true
 }
 
 trap cleanup EXIT
@@ -23,4 +23,4 @@ tar -xvf "firecracker-${FIRECRACKER_VERSION}-x86_64.tgz" --strip-components=1 -C
 tree $root
 
 popd
-rm -r "$WORKDIR"
+rm -r "$work"

@@ -18,6 +18,9 @@ jobs:
         bash ./scripts/buildroot.sh
         ls -al
         tree -L 2 .
+        tree -L 2 dist
         tree images
+        docker build . -t test
+        docker run -it --rm --entrypoint ls -al /dist test
         # stat -c "%n %s" images/jammy/jammy.*
       shell: bash
