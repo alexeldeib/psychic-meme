@@ -1,6 +1,6 @@
 # Fix bugs in distroless busybox; simple `ls` doesn't work.
-FROM ubuntu:22.04
-RUN apt-get update && apt-get install -yq curl
+FROM alpine:3
+RUN apk --update add curl
 
 COPY start.sh /start.sh
 
