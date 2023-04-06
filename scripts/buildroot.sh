@@ -25,7 +25,7 @@ popd || exit 1
 popd || exit 1
 
 mkdir -p $REPO_ROOT/output
-make -C $work/buildroot O=$REPO_ROOT/output BR2_EXTERNAL=$REPO_ROOT fire_defconfig
+make -C $work/buildroot O=$REPO_ROOT/output BR2_EXTERNAL=$REPO_ROOT default_defconfig
 make -C $work/buildroot O=$REPO_ROOT/output -j$(nproc) &> make.log
 pid=$?
 
