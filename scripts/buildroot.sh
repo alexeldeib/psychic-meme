@@ -18,7 +18,9 @@ function cleanup() {
 trap cleanup EXIT
 
 git clone https://github.com/buildroot/buildroot
+pushd buildroot
 git checkout 2023.02
+popd || exit 1
 
 make O=$root BR2_EXTERNAL=$REPO_ROOT -C buildroot default_defconfig
 
