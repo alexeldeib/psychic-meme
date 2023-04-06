@@ -1,2 +1,10 @@
 output
 build
+.config.old
+images
+staging
+target
+..config.tmp
+.br2*
+host
+dist
