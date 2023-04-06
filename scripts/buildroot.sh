@@ -22,6 +22,8 @@ pushd buildroot
 git checkout 2023.02
 popd || exit 1
 
-make O=$root BR2_EXTERNAL=$REPO_ROOT -C buildroot default_defconfig
-
-tree $root
+make BR2_EXTERNAL=$REPO_ROOT -C buildroot default_defconfig
+make BR2_EXTERNAL=$REPO_ROOT -C buildroot -j$(nproc)
+cp $REPO_ROOT
+tree $REPO_ROOT
+tree buildroot
