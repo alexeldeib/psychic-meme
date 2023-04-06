@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# Sets up VM networking
+#
+
+# Allow a few customizations from a config file
+start() {
+    printf "Setting up networking"
+    /usr/local/bin/fcnet-setup.sh
+    [ $? = 0 ] && echo "OK" || echo "FAIL"
+}
+
+restart() {
+    stop
+    start
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        ;;
+  restart|reload)
+        restart
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?

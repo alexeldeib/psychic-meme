@@ -14,7 +14,10 @@ jobs:
     - name: build
       run: |
         sudo apt-get update && sudo apt-get install -yq tree
-        bash ./scripts/build-images.sh
+        bash ./scripts/firecracker.sh
+        bash ./scripts/buildroot.sh
+        ls -al
+        tree -L 2 .
         tree images
-        stat -c "%n %s" images/jammy/jammy.*
+        # stat -c "%n %s" images/jammy/jammy.*
       shell: bash
