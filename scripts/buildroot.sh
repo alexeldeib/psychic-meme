@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-sudo apt-get update && sudo apt-get install -yq tree
+sudo apt-get update && sudo apt-get install -yq tree libelf-dev
 
 REPO_ROOT=$(realpath $(dirname "${BASH_SOURCE[0]}")/..)
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
