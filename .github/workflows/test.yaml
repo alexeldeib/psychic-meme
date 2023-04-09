@@ -26,11 +26,8 @@ jobs:
         sudo apt-get update && sudo apt-get install -yq tree
         bash ./scripts/firecracker.sh
         bash ./scripts/buildroot.sh
-        ls -al
-        tree -L 2 .
-        tree -L 2 dist
-        tree -L 2 output/images
-        docker build . -t test
-        docker run -it --rm /dist test
+        tree --du -h output/images
+        docker build . -t docker.io/alexeldeib/test:dev
+        # docker run --init --rm /dist test
         # stat -c "%n %s" images/jammy/jammy.*
       shell: bash

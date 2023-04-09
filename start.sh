@@ -1,8 +1,18 @@
 #!/bin/sh
 set -x
 
+TAP_DEV="tap0"
 LOGFILE="./firecracker.log"
 API_SOCKET="./firecracker.socket"
+
+# cleanup() {
+#     ret=$?
+#     rm -f "${API_SOCKET}"
+#     rm -f "${LOGFILE}"
+#     exit $?
+# }
+
+# trap cleanup EXIT INT TERM
 
 /usr/local/bin/firecracker/firecracker-v1.3.1-x86_64 --api-sock ${API_SOCKET} &
 pid=$!
@@ -24,7 +34,6 @@ ARCH=$(uname -m)
 KERNEL="/vmlinux"
 KERNEL_BOOT_ARGS="console=ttyS0 reboot=k panic=1 pci=off"
 
-
 # Set boot source
 curl -X PUT --unix-socket "${API_SOCKET}" \
     --data "{
@@ -33,15 +42,15 @@ curl -X PUT --unix-socket "${API_SOCKET}" \
     }" \
     "http://localhost/boot-source"
 
-# ROOTFS="/rootfs.ext4"
-# curl -X PUT --unix-socket "${API_SOCKET}" \
-#     --data "{
-#         \"drive_id\": \"rootfs\",
-#         \"path_on_host\": \"${ROOTFS}\",
-#         \"is_root_device\": true,
-#         \"is_read_only\": false
-#     }" \
-#     "http://localhost/drives/rootfs"
+ROOTFS="/rootfs.ext4"
+curl -X PUT --unix-socket "${API_SOCKET}" \
+    --data "{
+        \"drive_id\": \"rootfs\",
+        \"path_on_host\": \"${ROOTFS}\",
+        \"is_root_device\": true,
+        \"is_read_only\": false
+    }" \
+    "http://localhost/drives/rootfs"
 
 # The IP address of a guest is derived from its MAC address with
 # `fcnet-setup.sh`, this has been pre-configured in the guest rootfs. It is
@@ -68,4 +77,8 @@ curl -X PUT --unix-socket "${API_SOCKET}" \
     }" \
     "http://localhost/actions"
 
+sleep 0.015s
+
 wait $pid
+echo $?
+cat $LOGFILE
