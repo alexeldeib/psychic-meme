@@ -4,12 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
-	//"os"
+	"os"
+	// "path/filepath"
 	"syscall"
 	"time"
 
 	"github.com/containerd/containerd"
 	"github.com/containerd/containerd/cio"
+	"github.com/containerd/containerd/containers"
 	"github.com/containerd/containerd/leases"
 	"github.com/containerd/containerd/namespaces"
 	"github.com/containerd/containerd/oci"
@@ -17,6 +19,7 @@ import (
 	// "github.com/opencontainers/image-spec/identity"
 	specs "github.com/opencontainers/runtime-spec/specs-go"
 	"github.com/sanity-io/litter"
+	"golang.org/x/sys/unix"
 )
 
 func main() {
@@ -103,46 +106,85 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("failed to prepare snapshot: %v", err)
 	}
-	defer func() {
-		if err := snapshotter.Remove(ctx, "instance"); err != nil {
-			log.Printf("failed to remove snapshot: %v", err)
-		}
-	}()
-	fmt.Printf("%#+v\n", mounts)
+	// defer func() {
+	// 	if err := snapshotter.Remove(ctx, "instance"); err != nil {
+	// 		log.Printf("failed to remove snapshot: %v", err)
+	// 	}
+	// }()
+	// fmt.Printf("%#+v\n", mounts)
 
 	if len(mounts) != 1 {
 		return fmt.Errorf("expected 1 mount, found %d", len(mounts))
 	}
 
 	ociMounts := []specs.Mount{
-		{
-			Source:      mounts[0].Source,
-			Destination: mounts[0].Source,
-			Type:        "bind",
-			Options:     []string{"rbind", "rw"},
-		},
-		{
-			Source:      "/dev/kvm",
-			Destination: "/dev/kvm",
-			Type:        "bind",
-			Options:     []string{"rbind", "rw"},
-		},
+		// {
+		// 	Source:      mounts[0].Source,
+		// 	Destination: mounts[0].Source,
+		// 	Type:        "bind",
+		// 	Options:     []string{"rbind", "rw"},
+		// },
+		// {
+		// 	Source:      "/dev/kvm",
+		// 	Destination: "/dev/kvm",
+		// 	Type:        "bind",
+		// 	Options:     []string{"rbind", "rw"},
+		// },
+		// {
+		// 	Source:      "/dev/net/tun",
+		// 	Destination: "/dev/net/tun",
+		// 	Type:        "bind",
+		// 	Options:     []string{"rbind", "rw"},
+		// },
 	}
+
+	// var stat unix.Stat_t
+	// if err := unix.Lstat(mounts[0].Source, &stat); err != nil {
+	// 	return err
+	// }
+
+	// var (
+	// 	devNumber = uint64(stat.Rdev) //nolint:nolintlint,unconvert // the type is 32bit on mips.
+	// 	major     = unix.Major(devNumber)
+	// 	minor     = unix.Minor(devNumber)
+	// )
+
+	// resolvedPath, err := filepath.EvalSymlinks(mounts[0].Source)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// fm := os.FileMode(stat.Mode &^ unix.S_IFMT)
+	// dev := specs.LinuxDevice{
+	// 	Type:     "b",
+	// 	Path:     "/dev/user",
+	// 	Major:    int64(major),
+	// 	Minor:    int64(minor),
+	// 	FileMode: &fm,
+	// }
 
 	container, err := client.NewContainer(
 		ctx,
 		"vmm",
 		containerd.WithNewSnapshot("vmm-snapshot", baseImage),
 		containerd.WithNewSpec(
-			oci.WithDefaultSpec(),
 			oci.WithImageConfig(baseImage),
-			oci.WithDefaultUnixDevices,
-			oci.WithAllDevicesAllowed,
-			oci.WithHostDevices,
-			oci.WithPrivileged,
 			oci.WithMounts(ociMounts),
+			oci.WithLinuxDevice("/dev/kvm", "rwm"),
+			oci.WithLinuxDevice("/dev/net/tun", "rwm"),
+			oci.WithLinuxDeviceFollowSymlinks(mounts[0].Source, "rwm"),
+			oci.WithEnv([]string{"ROOTFS=" + mounts[0].Source}),
+			oci.WithAddedCapabilities([]string{"CAP_NET_ADMIN", "CAP_NET_RAW"}),
+			oci.WithHostNamespace(specs.NetworkNamespace),
 		),
 	)
+
+	// 	go build
+	// ctr -n example t kill -s 9 vmm
+	// ctr -n example c rm vmm
+	// ctr -n example snapshot rm vmm-snapshot
+	// ctr -n example snapshot --snapshotter devmapper rm instance
+	// ./test
 	if err != nil {
 		return err
 	}

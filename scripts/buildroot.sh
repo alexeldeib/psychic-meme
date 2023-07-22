@@ -5,10 +5,10 @@ sudo apt-get update && sudo apt-get install -yq tree libelf-dev
 
 REPO_ROOT=$(realpath $(dirname "${BASH_SOURCE[0]}")/..)
 
-mkdir -p /tmp/buildroot || true
+mkdir -p /opt/buildroot || true
 
 root=$(pwd)/dist
-work=/tmp/buildroot
+work=/opt/buildroot
 pushd $work || exit 1
 
 function cleanup() {
@@ -20,7 +20,7 @@ function cleanup() {
 
 git clone https://github.com/buildroot/buildroot || true
 pushd buildroot
-git checkout 2023.02
+git checkout 2023.05
 popd || exit 1
 popd || exit 1
 

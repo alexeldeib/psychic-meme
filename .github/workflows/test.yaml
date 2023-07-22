@@ -28,6 +28,6 @@ jobs:
         bash ./scripts/buildroot.sh
         tree --du -h output/images
         docker build . -t docker.io/alexeldeib/test:dev
-        # docker run --init --rm /dist test
+        # docker run --rm test
         # stat -c "%n %s" images/jammy/jammy.*
       shell: bash

@@ -6,7 +6,7 @@ COPY start.sh /start.sh
 
 COPY dist/. /
 COPY output/images/vmlinux /vmlinux
-COPY output/images/rootfs.ext4 /rootfs.ext4
+COPY output/images/rootfs.cpio /rootfs.cpio
 
 ENTRYPOINT ["/start.sh"]
 
